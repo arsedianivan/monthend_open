@@ -1,0 +1,48 @@
+# Ignore Python bytecode files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore environment variable files
+.env
+
+# Ignore virtual environment directories
+venv/
+ENV/
+env/
+.venv/
+
+# Ignore IDE and editor-specific files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Ignore macOS specific files
+.DS_Store
+
+# Ignore node_modules for React frontend
+gl-frontend/node_modules/
+gl-frontend/build/
+
+# Ignore log files
+*.log
+
+# Ignore compiled code
+dist/
+build/
+
+# Ignore coverage reports
+coverage/
+*.cover
+*.coverage
+*.coverage.*
+.cache
+
+# Ignore yarn files
+.yarn/
+yarn-error.log
+
+# Ignore other system files
+Thumbs.db
