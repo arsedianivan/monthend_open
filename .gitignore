@@ -23,8 +23,8 @@ env/
 .DS_Store
 
 # Ignore node_modules for React frontend
-gl-frontend/node_modules/
-gl-frontend/build/
+frontend/node_modules/
+frontend/build/
 
 # Ignore log files
 *.log
@@ -46,3 +46,6 @@ yarn-error.log
 
 # Ignore other system files
 Thumbs.db
+
+# Ignore npm debug logs
+npm-debug.log*
