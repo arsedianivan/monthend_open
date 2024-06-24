@@ -2,6 +2,8 @@
 import React from 'react';
 import CreateAccount from './components/CreateAccount';
 import AccountList from './components/AccountList';
+import CreateJournalEntry from './components/CreateJournalEntry';
+import JournalEntryList from './components/JournalEntryList';
 
 function App() {
     return (
@@ -9,6 +11,8 @@ function App() {
             <h1>General Ledger</h1>
             <CreateAccount />
             <AccountList />
+            <CreateJournalEntry />
+            <JournalEntryList />
         </div>
     );
 }

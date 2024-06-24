@@ -22,3 +22,23 @@ export const getAccounts = async () => {
         throw error;
     }
 };
+
+export const createJournalEntry = async (journalEntry) => {
+    try {
+        const response = await axios.post(`${API_URL}/journal_entries/`, journalEntry);
+        return response.data;
+    } catch (error) {
+        console.error("There was an error creating the journal entry!", error);
+        throw error;
+    }
+};
+
+export const getJournalEntries = async () => {
+    try {
+        const response = await axios.get(`${API_URL}/journal_entries/`);
+        return response.data;
+    } catch (error) {
+        console.error("There was an error fetching the journal entries!", error);
+        throw error;
+    }
+};
