@@ -42,3 +42,23 @@ export const getJournalEntries = async () => {
         throw error;
     }
 };
+
+export const createTransaction = async (transaction) => {
+    try {
+        const response = await axios.post(`${API_URL}/transactions/`, transaction);
+        return response.data;
+    } catch (error) {
+        console.error("There was an error creating the transaction!", error);
+        throw error;
+    }
+};
+
+export const getTransactions = async () => {
+    try {
+        const response = await axios.get(`${API_URL}/transactions/`);
+        return response.data;
+    } catch (error) {
+        console.error("There was an error fetching the transactions!", error);
+        throw error;
+    }
+};
