@@ -3,6 +3,7 @@
 from sqlalchemy import Column, Integer, String, Numeric, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from .database import Base
+from enum import Enum
 
 class Account(Base):
     __tablename__ = "accounts"
@@ -26,3 +27,15 @@ class Transaction(Base):
     account_id = Column(Integer, ForeignKey('accounts.id'))
     debit = Column(Numeric(10, 2))
     credit = Column(Numeric(10, 2))
+
+class Role(str, Enum):
+    admin = "admin"
+    user = "user"
+    viewer = "viewer"
+
+role_permissions = {
+    Role.admin: ["create", "read", "update", "delete"],
+    Role.user: ["create", "read", "update"],
+    Role.viewer: ["read"]
+}
+
