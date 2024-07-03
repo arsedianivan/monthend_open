@@ -7,6 +7,7 @@ from sqlalchemy import create_engine
 from . import models, schemas
 from .database import Base, SessionLocal
 from dotenv import load_dotenv
+from prometheus_fastapi_instrumentator import Instrumentator
 
 load_dotenv()
 
@@ -70,3 +71,6 @@ def read_transaction(transaction_id: int, db: Session = Depends(get_db)):
     if db_transaction is None:
         raise HTTPException(status_code=404, detail="Transaction not found")
     return db_transaction
+
+# Add Prometheus instrumentation
+Instrumentator().instrument(app).expose(app)
