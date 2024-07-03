@@ -83,5 +83,6 @@ async def log_requests(request: Request, call_next):
     response = await call_next(request)
     logger.info(f"rid={idem} completed_in={response.elapsed.total_seconds()}s status_code={response.status_code}")
     return response
+
 # Add Prometheus instrumentation
 Instrumentator().instrument(app).expose(app)
