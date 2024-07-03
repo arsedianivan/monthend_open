@@ -3,6 +3,11 @@
 from sqlalchemy import Column, Integer, String, Numeric, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from .database import Base
+from sqlalchemy import Column, Integer, String, Enum
+from sqlalchemy.ext.declarative import declarative_base
+from .roles import Role
+
+Base = declarative_base()
 
 class Account(Base):
     __tablename__ = "accounts"
@@ -26,4 +31,11 @@ class Transaction(Base):
     account_id = Column(Integer, ForeignKey('accounts.id'))
     debit = Column(Numeric(10, 2))
     credit = Column(Numeric(10, 2))
+
+class User(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, unique=True, index=True)
+    hashed_password = Column(String)
+    role = Column(Enum(Role), default=Role.viewer)
 
