@@ -9,6 +9,12 @@ from .database import Base, SessionLocal
 from dotenv import load_dotenv
 from prometheus_fastapi_instrumentator import Instrumentator
 import logging
+from fastapi import FastAPI, Depends, HTTPException
+from fastapi.security import OAuth2PasswordBearer
+from .roles import Role, role_permissions
+from .models import User
+from .database import SessionLocal
+from sqlalchemy.orm import Session
 
 load_dotenv()
 
@@ -23,6 +29,8 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
 
 def get_db():
     db = SessionLocal()
@@ -83,6 +91,25 @@ async def log_requests(request: Request, call_next):
     response = await call_next(request)
     logger.info(f"rid={idem} completed_in={response.elapsed.total_seconds()}s status_code={response.status_code}")
     return response
+
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(SessionLocal)):
+    user = db.query(User).filter(User.email == token).first()
+    if user is None:
+        raise HTTPException(status_code=401, detail="Invalid authentication credentials")
+    return user
+
+def check_permissions(user: User, permission: str):
+    if permission not in role_permissions[user.role]:
+        raise HTTPException(status_code=403, detail="Operation not permitted")
+
+@app.get("/users/{user_id}")
+def read_user(user_id: int, current_user: User = Depends(get_current_user)):
+    check_permissions(current_user, "read")
+    user = db.query(User).filter(User.id == user_id).first()
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
+
 
 # Add Prometheus instrumentation
 Instrumentator().instrument(app).expose(app)
