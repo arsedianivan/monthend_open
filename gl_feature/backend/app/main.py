@@ -8,6 +8,7 @@ from . import models, schemas
 from .database import Base, SessionLocal
 from dotenv import load_dotenv
 from prometheus_fastapi_instrumentator import Instrumentator
+import logging
 
 load_dotenv()
 
@@ -17,6 +18,9 @@ engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 models.Base.metadata.create_all(bind=engine)
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
@@ -72,5 +76,12 @@ def read_transaction(transaction_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Transaction not found")
     return db_transaction
 
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    idem = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+    logger.info(f"rid={idem} start request path={request.url.path}")
+    response = await call_next(request)
+    logger.info(f"rid={idem} completed_in={response.elapsed.total_seconds()}s status_code={response.status_code}")
+    return response
 # Add Prometheus instrumentation
 Instrumentator().instrument(app).expose(app)
